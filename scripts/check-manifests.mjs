@@ -131,6 +131,12 @@ if (typeof logoRel !== "string") {
   }
 }
 
+// 4c. Anthropic's directory holds a plugin whose Claude manifest has no privacy
+//     policy; keep it the same page the Codex overlay links.
+if (!claudePl?.privacyPolicyUrl || claudePl.privacyPolicyUrl !== codexPl?.interface?.privacyPolicyURL) {
+  fail(".claude-plugin/plugin.json privacyPolicyUrl must match .codex-plugin/plugin.json interface.privacyPolicyURL");
+}
+
 // OpenAI 的插件图标与 Skill 图标分别声明；资产存在并不代表客户端会自动使用。
 if (agentPl?.extensions?.["com.openai"]) {
   fail("plugin.json must not shadow the .codex-plugin/plugin.json overlay");
@@ -162,6 +168,14 @@ if (!existsSync(skillAgentPath)) {
 }
 if (!existsSync(skillIconPath) || !readFileSync(skillIconPath).equals(readFileSync(path.join(plugin, "assets/icon.png")))) {
   fail("Skill assets/icon.png must match the plugin's assets/icon.png");
+}
+
+// 4d. Anthropic's directory holds a version for manual review when bundled text
+//     names an image or font file. Only manifests may point at the icons.
+for (const textRel of ["README.md", "skills/glasser/SKILL.md", "rules/glasser-spending.mdc"]) {
+  if (/\.(png|svg|jpe?g|gif|webp|ico|woff2?|ttf|otf)\b/i.test(readFileSync(path.join(plugin, textRel), "utf8"))) {
+    fail(`plugins/glasser/${textRel} names an image or font file — keep asset notes in DISTRIBUTION.md`);
+  }
 }
 
 // 5. The skill must never carry a pipe-to-shell install; xAI rejects it.

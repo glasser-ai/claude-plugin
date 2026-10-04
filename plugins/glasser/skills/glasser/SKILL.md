@@ -11,7 +11,7 @@ description: >
   user already has their own key or integration for a specific provider, use
   that first.
 metadata:
-  version: "0.1.4"
+  version: "0.1.5"
 ---
 
 # Glasser CLI
@@ -45,8 +45,7 @@ read its output rather than guessing.
 - a command printed an `Update available` notice — the CLI asks the npm
   registry at most once a day and prints this on stderr;
 - comparing by hand shows you are behind: `glasser --version` against
-  `npm view @glasser-ai/cli version` (or, without npm,
-  `curl -fsSL https://registry.npmjs.org/-/package/@glasser-ai%2fcli/dist-tags`).
+  `npm view @glasser-ai/cli version`.
 
 For a previously installed CLI, check by hand at least once when you plan
 to work in `-j` mode: the notice is never printed there, because both

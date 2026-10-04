@@ -109,7 +109,7 @@ plugins/glasser/
 ├── .mcp.json                     identical copy (read by Claude Code, Grok Build)
 ├── skills/glasser/SKILL.md
 ├── rules/glasser-spending.mdc
-├── assets/logo.svg               1:1, transparent (see plugins/glasser/README.md)
+├── assets/logo.svg               1:1, transparent (see DISTRIBUTION.md)
 └── assets/icon.png               the same mark, rasterised for ClawHub
 scripts/                          validators and the version bump
 ```

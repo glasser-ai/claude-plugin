@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// Consistency checks that validate-template.mjs does not cover: one version
-// everywhere, the mcp.json / .mcp.json pair rule, manifest pointers, and a
-// guard against a pipe-to-shell install sneaking back into the skill.
+// Consistency checks for the Claude Code package: one version everywhere,
+// manifest pointers, the MCP config shape, and a guard against a
+// pipe-to-shell install sneaking back into the skill.
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
@@ -19,13 +19,8 @@ const readJson = (p) => {
   }
 };
 
-const cursorMp = readJson(path.join(root, ".cursor-plugin/marketplace.json"));
 const claudeMp = readJson(path.join(root, ".claude-plugin/marketplace.json"));
-const cursorPl = readJson(path.join(plugin, ".cursor-plugin/plugin.json"));
 const claudePl = readJson(path.join(plugin, ".claude-plugin/plugin.json"));
-const agentPl = readJson(path.join(plugin, "plugin.json"));
-const codexPl = readJson(path.join(plugin, ".codex-plugin/plugin.json"));
-const pkg = readJson(path.join(plugin, "package.json"));
 const skillPath = path.join(plugin, "skills/glasser/SKILL.md");
 const skill = readFileSync(skillPath, "utf8");
 const frontmatter = skill.split("\n---\n")[0];
@@ -35,15 +30,9 @@ if (/^version:/m.test(frontmatter)) fail("SKILL.md: version must live under meta
 
 // 1. One version everywhere. Clients pin installs to it.
 const versions = {
-  ".cursor-plugin/marketplace.json metadata.version": cursorMp?.metadata?.version,
-  ".cursor-plugin/marketplace.json plugins[0].version": cursorMp?.plugins?.[0]?.version,
   ".claude-plugin/marketplace.json metadata.version": claudeMp?.metadata?.version,
   ".claude-plugin/marketplace.json plugins[0].version": claudeMp?.plugins?.[0]?.version,
-  "plugins/glasser/.cursor-plugin/plugin.json": cursorPl?.version,
   "plugins/glasser/.claude-plugin/plugin.json": claudePl?.version,
-  "plugins/glasser/plugin.json": agentPl?.version,
-  "plugins/glasser/.codex-plugin/plugin.json": codexPl?.version,
-  "plugins/glasser/package.json": pkg?.version,
   "plugins/glasser/skills/glasser/SKILL.md metadata.version": frontmatterVersion,
 };
 const distinct = new Set(Object.values(versions));
@@ -52,133 +41,59 @@ if (distinct.size !== 1 || distinct.has(undefined)) {
   fail(`versions disagree:\n${lines.join("\n")}`);
 }
 
-// 2. Every manifest and catalog entry names the same plugin.
-const names = [
-  ["cursor marketplace entry", cursorMp?.plugins?.[0]?.name],
+// 2. The catalog entry and the manifest name the same plugin.
+for (const [label, name] of [
   ["claude marketplace entry", claudeMp?.plugins?.[0]?.name],
-  [".cursor-plugin/plugin.json", cursorPl?.name],
   [".claude-plugin/plugin.json", claudePl?.name],
-  ["plugin.json", agentPl?.name],
-  [".codex-plugin/plugin.json", codexPl?.name],
-  ["package.json", pkg?.name],
-];
-for (const [label, name] of names) {
+]) {
   if (name !== "glasser") fail(`${label}: name is ${JSON.stringify(name)}, expected "glasser"`);
 }
 
-// 3. The MCP pair: byte-identical, valid JSON, and nothing but a URL. The
-//    server speaks OAuth — the client signs the user in on first use — so a
-//    headers block or a ${VARIABLE} placeholder here is a regression to the
-//    paste-a-Key setup, and a Cursor `variables` declaration would prompt
-//    the user for a value nothing reads.
-const mcpRaw = readFileSync(path.join(plugin, "mcp.json"), "utf8");
-const dotRaw = readFileSync(path.join(plugin, ".mcp.json"), "utf8");
-if (mcpRaw !== dotRaw) fail("mcp.json and .mcp.json must be byte-identical");
+// 3. The MCP config: valid JSON and nothing but a URL. The server speaks
+//    OAuth — the client signs the user in on first use — so a headers block
+//    or a ${VARIABLE} placeholder here is a regression to the paste-a-Key setup.
+const mcpRaw = readFileSync(path.join(plugin, ".mcp.json"), "utf8");
 let mcp = null;
 try {
   mcp = JSON.parse(mcpRaw);
 } catch (error) {
-  fail(`mcp.json is not valid JSON: ${error.message}`);
+  fail(`.mcp.json is not valid JSON: ${error.message}`);
 }
 const server = mcp?.mcpServers?.glasser;
-if (!server) fail("mcp.json must declare mcpServers.glasser");
-if (server && server.url !== "https://api.glasser.ai/mcp") fail(`mcp.json url must be https://api.glasser.ai/mcp, got ${JSON.stringify(server?.url)}`);
-if (server && "headers" in server) fail("mcp.json must not carry headers — the server signs the user in with OAuth");
-if (/\$\{/.test(mcpRaw)) fail("mcp.json must not reference a ${VARIABLE} — there is no Key to fill in");
-if (cursorPl?.variables) fail(".cursor-plugin/plugin.json must not declare variables — nothing reads them");
+if (!server) fail(".mcp.json must declare mcpServers.glasser");
+if (server && server.url !== "https://api.glasser.ai/mcp") fail(`.mcp.json url must be https://api.glasser.ai/mcp, got ${JSON.stringify(server?.url)}`);
+if (server && "headers" in server) fail(".mcp.json must not carry headers — the server signs the user in with OAuth");
+if (/\$\{/.test(mcpRaw)) fail(".mcp.json must not reference a ${VARIABLE} — there is no Key to fill in");
 
-// 4. Each manifest points at the MCP file its client reads.
-if (claudePl?.mcpServers !== "./.mcp.json") {
-  fail(`.claude-plugin/plugin.json mcpServers must be "./.mcp.json", got ${JSON.stringify(claudePl?.mcpServers)}`);
+// 4. Claude Code loads skills/ and .mcp.json from their default locations, and
+//    a manifest key for either only adds to that, so neither is declared.
+for (const key of ["skills", "mcpServers"]) {
+  if (claudePl && key in claudePl) fail(`.claude-plugin/plugin.json must not declare ${key} — the default location already loads`);
 }
-if (cursorPl?.mcpServers !== "./mcp.json") {
-  fail(`.cursor-plugin/plugin.json mcpServers must be "./mcp.json", got ${JSON.stringify(cursorPl?.mcpServers)}`);
-}
-for (const [label, mp] of [["cursor", cursorMp], ["claude", claudeMp]]) {
-  const source = mp?.plugins?.[0]?.source;
-  if (typeof source !== "string" || !existsSync(path.join(root, source))) {
-    fail(`${label} marketplace source does not resolve: ${JSON.stringify(source)}`);
-  }
+const source = claudeMp?.plugins?.[0]?.source;
+if (typeof source !== "string" || !existsSync(path.join(root, source))) {
+  fail(`marketplace source does not resolve: ${JSON.stringify(source)}`);
 }
 
-// 4b. The plugin's own icon is what clients draw in a dark plugin list. The bare
-//     mark is 2336x2165 and its primary pair has a black head — on a dark panel
-//     the head vanishes and only the goggles float. Require a square copy of the
-//     monorepo's generated/logo-panel.svg: transparent, so the client's own card
-//     shows through, with the reversed pair so the whole mark survives on it.
-const logoRel = cursorPl?.logo;
-if (typeof logoRel !== "string") {
-  fail(".cursor-plugin/plugin.json must declare a logo");
-} else {
-  const logoPath = path.join(plugin, logoRel);
-  if (!existsSync(logoPath)) {
-    fail(`.cursor-plugin/plugin.json logo points at a missing file: ${logoRel}`);
-  } else {
-    const logo = readFileSync(logoPath, "utf8");
-    const box = logo.match(/viewBox="0 0 (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)"/);
-    if (!box || box[1] !== box[2]) {
-      fail(`${logoRel} must be 1:1 — marketplaces and plugin lists draw it in a square slot`);
-    }
-    // The mark is a head plus one goggle strap. In the primary pair the head is
-    // black, which vanishes on a dark panel and leaves the goggles floating; the
-    // reversed pair paints the head orange and only the strap black. So more than
-    // one black fill means someone copied the primary pair back in.
-    if ((logo.match(/fill="black"/g) ?? []).length > 1) {
-      fail(
-        `${logoRel} has a black head — it disappears on a dark plugin panel, leaving the goggles floating. Ship the reversed pair (generated/logo-panel.svg in the monorepo).`
-      );
-    }
-  }
+// 4b. Anthropic's directory reads its listing fields from plugin.json.
+for (const field of ["privacyPolicyUrl", "termsOfServiceUrl"]) {
+  if (!claudePl?.[field]?.startsWith("https://")) fail(`.claude-plugin/plugin.json must declare ${field} as an https:// URL`);
 }
+if (typeof claudePl?.icon !== "string" || !existsSync(path.join(plugin, claudePl.icon))) {
+  fail(`.claude-plugin/plugin.json icon must point at an existing file, got ${JSON.stringify(claudePl?.icon)}`);
+}
+// The directory requires every remote MCP server to name its transport.
+if (server && !["http", "sse", "ws"].includes(server.type)) fail(`.mcp.json glasser.type must be http, sse or ws, got ${JSON.stringify(server.type)}`);
 
-// 4c. Anthropic's directory holds a plugin whose Claude manifest has no privacy
-//     policy; keep it the same page the Codex overlay links.
-if (!claudePl?.privacyPolicyUrl || claudePl.privacyPolicyUrl !== codexPl?.interface?.privacyPolicyURL) {
-  fail(".claude-plugin/plugin.json privacyPolicyUrl must match .codex-plugin/plugin.json interface.privacyPolicyURL");
-}
-
-// OpenAI 的插件图标与 Skill 图标分别声明；资产存在并不代表客户端会自动使用。
-if (agentPl?.extensions?.["com.openai"]) {
-  fail("plugin.json must not shadow the .codex-plugin/plugin.json overlay");
-}
-// 组件由根 plugin.json 的 Agent Plugins 格式自动发现，兼容配置只负责展示。
-if (codexPl?.skills !== undefined || codexPl?.mcpServers !== undefined) {
-  fail(".codex-plugin/plugin.json must leave component discovery to the portable manifest");
-}
-if (!pkg?.files?.includes(".codex-plugin")) {
-  fail("package.json files must include .codex-plugin");
-}
-for (const field of ["composerIcon", "logo", "logoDark"]) {
-  const asset = codexPl?.interface?.[field];
-  if (asset !== "./assets/icon.png" || !existsSync(path.join(plugin, asset))) {
-    fail(`.codex-plugin/plugin.json interface.${field} must reference the existing ./assets/icon.png`);
-  }
-}
-const skillAgentPath = path.join(plugin, "skills/glasser/agents/openai.yaml");
-const skillIconPath = path.join(plugin, "skills/glasser/assets/icon.png");
-if (!existsSync(skillAgentPath)) {
-  fail("Skill must include agents/openai.yaml for its OpenAI icon");
-} else {
-  const agent = readFileSync(skillAgentPath, "utf8");
-  for (const field of ["icon_small", "icon_large"]) {
-    if (!agent.includes(`  ${field}: "./assets/icon.png"`)) {
-      fail(`Skill agents/openai.yaml ${field} must reference ./assets/icon.png`);
-    }
-  }
-}
-if (!existsSync(skillIconPath) || !readFileSync(skillIconPath).equals(readFileSync(path.join(plugin, "assets/icon.png")))) {
-  fail("Skill assets/icon.png must match the plugin's assets/icon.png");
-}
-
-// 4d. Anthropic's directory holds a version for manual review when bundled text
-//     names an image or font file. Only manifests may point at the icons.
-for (const textRel of ["README.md", "skills/glasser/SKILL.md", "rules/glasser-spending.mdc"]) {
+// 4c. Anthropic's directory holds a version for manual review when bundled text
+//     names an image or font file.
+for (const textRel of ["README.md", "skills/glasser/SKILL.md"]) {
   if (/\.(png|svg|jpe?g|gif|webp|ico|woff2?|ttf|otf)\b/i.test(readFileSync(path.join(plugin, textRel), "utf8"))) {
-    fail(`plugins/glasser/${textRel} names an image or font file — keep asset notes in DISTRIBUTION.md`);
+    fail(`plugins/glasser/${textRel} names an image or font file`);
   }
 }
 
-// 5. The skill must never carry a pipe-to-shell install; xAI rejects it.
+// 5. The skill must never carry a pipe-to-shell install.
 if (/curl[^\n]*\|\s*(ba|z)?sh\b/.test(skill) || /install\.sh/.test(skill)) {
   fail("SKILL.md contains a curl | sh install — use npm install -g instead");
 }

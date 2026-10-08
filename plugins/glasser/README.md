@@ -2,18 +2,15 @@
 
 Search, inspect and run paid third-party API endpoints through one Key.
 Install instructions, authentication and the list of network endpoints are in
-the [repository README](https://github.com/glasser-ai/plugins#readme).
+the [repository README](https://github.com/glasser-ai/claude-plugin#readme).
 
-| Component | File | Read by |
-|---|---|---|
-| Skill | `skills/glasser/SKILL.md` | every agent |
-| MCP server | `mcp.json` | Cursor, Agent Plugins clients |
-| MCP server, identical copy | `.mcp.json` | Claude Code, Grok Build |
-| Rule | `rules/glasser-spending.mdc` | Cursor |
-| Manifest | `openclaw.plugin.json` | ClawHub, OpenClaw |
+| Component | File |
+|---|---|
+| Skill | `skills/glasser/SKILL.md` |
+| MCP server | `.mcp.json` |
 
-Both MCP files point at `https://api.glasser.ai/mcp` and carry no
-credentials: the server speaks OAuth, so the client signs the user in on
+The MCP config points at `https://api.glasser.ai/mcp` and carries no
+credentials: the server speaks OAuth, so Claude Code signs the user in on
 first use. The plugin ships no executable code.
 
 The service behind it is governed by Glasser's

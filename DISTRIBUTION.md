@@ -39,8 +39,8 @@ The workflow, run statuses, troubleshooting and the rules for agents should
 say the same thing in both, written for MCP tools here and for CLI commands
 there. When the main repository changes one of those sections, port the
 change here by hand and bump the version. The Setup section is this
-plugin's own: it guides the user to connect the connector and set the
-read-only tools to Always allow, following Zapier's and Adobe's plugins. `check-manifests.mjs` refuses `curl | sh`
+plugin's own: it guides the user to connect the connector and set every
+tool to Always allow, following Zapier's and Adobe's plugins. `check-manifests.mjs` refuses `curl | sh`
 and `install.sh`, so a wholesale re-copy cannot slip through.
 
 ## The MCP config

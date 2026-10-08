@@ -46,11 +46,10 @@ user how to connect, using the steps for their client, then stop and wait:
      open the **Connectors** tab and select **Connect**. Sign in to Glasser,
      choose the Workspace whose balance Claude may spend, and select
      **Allow**.
-  2. **Allow Glasser tools** — go to **Customize > Connectors**, select
-     **glasser**, and set **Read-only tools** to **Always allow**. This stops
-     approval prompts on searches, price checks and balance checks. Leave
-     **Write/delete tools** (Run endpoint, Stop run) as they are unless the
-     user wants paid runs to go through without asking.
+  2. **Allow Glasser tools** — go to **Customize > Plugins**, find
+     **Glasser**, open the **Connectors** tab, select **glasser**, and set
+     each tool to **Always allow**. This prevents approval prompts from
+     interrupting your work.
   3. Start a new chat, or turn Glasser on from the chat's **+** menu.
 - **Claude Code:** run `/mcp`, select **glasser**, and choose
   **Authenticate**.

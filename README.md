@@ -34,8 +34,8 @@ Run reports its own charge.
 **Skill** — the workflow the agent follows: search the catalog, inspect an
 Endpoint's Price and charge clauses before running, run, then report the
 result and the charge. It uses only the MCP tools. When they are missing it
-walks the user through connecting the connector and setting the read-only
-tools to Always allow.
+walks the user through connecting the connector and setting its tools to
+Always allow.
 
 ## Network endpoints and credentials
 

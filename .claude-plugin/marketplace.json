@@ -21,7 +21,7 @@
         "url": "https://glasser.ai"
       },
       "homepage": "https://glasser.ai",
-      "repository": "https://github.com/glasser-ai/plugins",
+      "repository": "https://github.com/glasser-ai/claude-plugin",
       "license": "MIT",
       "category": "data",
       "keywords": [

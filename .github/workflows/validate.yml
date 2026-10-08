@@ -13,7 +13,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Cursor template checks
-        run: node scripts/validate-template.mjs
       - name: Manifest consistency
         run: node scripts/check-manifests.mjs

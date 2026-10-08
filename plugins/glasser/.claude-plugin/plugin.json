@@ -1,6 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "glasser",
+  "displayName": "Glasser",
   "version": "0.1.5",
   "description": "1,000+ paid data endpoints behind one key. People and company enrichment, funding and hiring signals, SEO and keywords, Google SERP and shopping, local places, news, patents, tech stacks, and social media (TikTok, Instagram, YouTube, Reddit and more) from providers like People Data Labs, Ahrefs, DataForSEO, Serper and Apollo. Built for sales, marketing, research, recruiting, pricing and diligence. Your agent searches the catalog, sees the provider and Price before each call, and reports the charge after. Pay per call, no subscription; failed calls and empty results cost $0.00.",
   "author": {
@@ -9,9 +10,10 @@
     "url": "https://glasser.ai"
   },
   "homepage": "https://glasser.ai",
-  "repository": "https://github.com/glasser-ai/plugins",
+  "repository": "https://github.com/glasser-ai/claude-plugin",
   "license": "MIT",
   "privacyPolicyUrl": "https://glasser.ai/privacy-policy",
+  "termsOfServiceUrl": "https://glasser.ai/terms-of-service",
   "keywords": [
     "glasser",
     "data enrichment",
@@ -39,6 +41,5 @@
     "tech stack",
     "mcp"
   ],
-  "skills": "./skills",
-  "mcpServers": "./.mcp.json"
+  "icon": "./assets/icon.png"
 }

@@ -39,12 +39,8 @@ connected; continue to **First run** or the user's task. If the user is
 being asked to approve glasser tool calls, give them step 2 below only.
 
 **Tools are not available.** The plugin is installed, but its connector is
-not connected yet — adding a plugin does not connect its connector. First,
-try to authenticate directly in the chat: if an authentication tool for the
-glasser server is available, call it. If that succeeds, check the tools
-again and continue.
-
-If it fails or no such tool exists, tell the user how to connect, using the
+not connected yet — adding a plugin does not connect its connector, and
+Claude cannot sign in for the user. Tell the user how to connect, using the
 steps for their client, then stop and wait. Drop step 2 if the tools are
 already set to **Always allow**:
 

@@ -75,6 +75,16 @@ if (typeof source !== "string" || !existsSync(path.join(root, source))) {
   fail(`marketplace source does not resolve: ${JSON.stringify(source)}`);
 }
 
+// 4a. claude.ai refuses an upload whose description is over 500 characters.
+for (const [label, description] of [
+  [".claude-plugin/plugin.json", claudePl?.description],
+  ["claude marketplace entry", claudeMp?.plugins?.[0]?.description],
+]) {
+  if (typeof description !== "string" || description.length > 500) {
+    fail(`${label}: description must be at most 500 characters, got ${description?.length}`);
+  }
+}
+
 // 4b. Anthropic's directory reads its listing fields from plugin.json.
 for (const field of ["privacyPolicyUrl", "termsOfServiceUrl"]) {
   if (!claudePl?.[field]?.startsWith("https://")) fail(`.claude-plugin/plugin.json must declare ${field} as an https:// URL`);

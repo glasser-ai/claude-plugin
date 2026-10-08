@@ -23,22 +23,24 @@ OpenClaw) lives in [glasser-ai/plugins](https://github.com/glasser-ai/plugins).
 ## The skill and glasser.ai/SKILL.md
 
 `plugins/glasser/skills/glasser/SKILL.md` started as a copy of
-`apps/web/public/SKILL.md` in the main repository (served at
+`apps/api/src/http/skill/SKILL.md` in the main repository (served at
 https://glasser.ai/SKILL.md) and is now its own text. The two serve
 different setups:
 
 | | glasser.ai/SKILL.md | this plugin |
 |---|---|---|
 | How it arrives | the agent fetches it at setup | pinned inside the installed plugin |
-| What is guaranteed present | nothing — it installs the CLI | the MCP tools |
-| Default transport | CLI | MCP tools; CLI for large results, scripting, CI |
-| Install command | `curl … \| sh` | none; optional `npm install -g` |
+| What is guaranteed present | nothing — it installs the CLI | the skill; the MCP tools once the connector is connected |
+| Default transport | CLI | MCP tools only; no CLI |
+| Install command | `curl … \| sh` | none |
 | Version | follows the CLI | follows the plugin |
 
-Everything else — the workflow, the commands table, run statuses,
-troubleshooting, the rules for agents — should say the same thing in both.
-When the main repository changes one of those sections, port the change here
-by hand and bump the version. `check-manifests.mjs` refuses `curl | sh`
+The workflow, run statuses, troubleshooting and the rules for agents should
+say the same thing in both, written for MCP tools here and for CLI commands
+there. When the main repository changes one of those sections, port the
+change here by hand and bump the version. The Setup section is this
+plugin's own: it guides the user to connect the connector and set every
+tool to Always allow, following Zapier's and Adobe's plugins. `check-manifests.mjs` refuses `curl | sh`
 and `install.sh`, so a wholesale re-copy cannot slip through.
 
 ## The MCP config

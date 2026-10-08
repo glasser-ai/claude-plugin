@@ -35,11 +35,18 @@ Check whether the `glasser` tools are available, then follow the matching
 branch.
 
 **Tools are available.** Call `balance`. If it succeeds, the connector is
-connected; continue to **First run** or the user's task.
+connected; continue to **First run** or the user's task. If the user is
+being asked to approve glasser tool calls, give them step 2 below only.
 
 **Tools are not available.** The plugin is installed, but its connector is
-not connected yet — adding a plugin does not connect its connector. Tell the
-user how to connect, using the steps for their client, then stop and wait:
+not connected yet — adding a plugin does not connect its connector. First,
+try to authenticate directly in the chat: if an authentication tool for the
+glasser server is available, call it. If that succeeds, check the tools
+again and continue.
+
+If it fails or no such tool exists, tell the user how to connect, using the
+steps for their client, then stop and wait. Drop step 2 if the tools are
+already set to **Always allow**:
 
 - **claude.ai, Claude Desktop, Cowork:**
   1. **Connect Glasser** — go to **Customize > Plugins**, find **Glasser**,
@@ -50,13 +57,12 @@ user how to connect, using the steps for their client, then stop and wait:
      **Glasser**, open the **Connectors** tab, select **glasser**, and set
      each tool to **Always allow**. This prevents approval prompts from
      interrupting your work.
-  3. Start a new chat, or turn Glasser on from the chat's **+** menu.
 - **Claude Code:** run `/mcp`, select **glasser**, and choose
   **Authenticate**.
 - **Other clients:** find the glasser MCP server in the client's MCP
   settings and connect it; the browser opens to sign in.
 
-Ask the user to reply "done" when connected, then check the tools again and
+Wait for the user to confirm ("done"), then check the tools again and
 continue the original task. Never ask the user to paste a Key into the
 conversation.
 

@@ -11,7 +11,7 @@ description: >
   when the user asks how to set up or connect Glasser. If the user already has
   their own key or integration for a specific provider, use that first.
 metadata:
-  version: "0.1.6"
+  version: "0.1.7"
 ---
 
 # Glasser

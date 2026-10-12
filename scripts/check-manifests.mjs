@@ -61,7 +61,10 @@ try {
 }
 const server = mcp?.mcpServers?.glasser;
 if (!server) fail(".mcp.json must declare mcpServers.glasser");
-if (server && server.url !== "https://api.glasser.ai/mcp") fail(`.mcp.json url must be https://api.glasser.ai/mcp, got ${JSON.stringify(server?.url)}`);
+// The utm pair only tells the server the install came from this plugin. OAuth
+// takes its resource from the server's metadata, which has no query string.
+const MCP_URL = "https://api.glasser.ai/mcp?utm_source=claude-code-plugin&utm_medium=plugin";
+if (server && server.url !== MCP_URL) fail(`.mcp.json url must be ${MCP_URL}, got ${JSON.stringify(server?.url)}`);
 if (server && "headers" in server) fail(".mcp.json must not carry headers — the server signs the user in with OAuth");
 if (/\$\{/.test(mcpRaw)) fail(".mcp.json must not reference a ${VARIABLE} — there is no Key to fill in");
 

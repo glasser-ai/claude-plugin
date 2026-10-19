@@ -51,6 +51,35 @@
         "tech stack",
         "mcp"
       ]
+    },
+    {
+      "name": "glasser-research",
+      "source": "./plugins/glasser-research",
+      "description": "Research companies, markets and the web inside Claude. Glasser connects Claude to live data on companies and prospects, search rankings and keywords, websites and online reviews, social profiles, local businesses, news and property records. Ask things like \"What industry is example.com in and how many employees does it have?\" or \"Compare search visibility for example.com and a competitor\", and Claude finds a suitable data endpoint, shows what it needs, and runs it once you approve.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Glasser",
+        "url": "https://glasser.ai"
+      },
+      "homepage": "https://glasser.ai",
+      "repository": "https://github.com/glasser-ai/claude-plugin",
+      "license": "MIT",
+      "category": "data",
+      "keywords": [
+        "glasser",
+        "company research",
+        "prospect research",
+        "seo",
+        "keywords",
+        "backlinks",
+        "web search",
+        "reviews",
+        "social media",
+        "local places",
+        "news",
+        "property data",
+        "mcp"
+      ]
     }
   ]
 }

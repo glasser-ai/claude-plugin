@@ -1,7 +1,7 @@
 # Distribution
 
-How this Claude Code plugin is published and the checks that keep the
-package consistent. The multi-client package (Cursor, Codex, Grok Build,
+How these Claude Code plugins are published and the checks that keep the
+packages consistent. The multi-client package (Cursor, Codex, Grok Build,
 OpenClaw) lives in [glasser-ai/plugins](https://github.com/glasser-ai/plugins).
 
 ## Channels
@@ -64,6 +64,21 @@ The directory holds a version for manual review when bundled text names an
 image or font file in backticks or a code block. Only the manifest may point
 at the icon; `check-manifests.mjs` fails if the plugin README or the skill
 names one.
+
+## Glasser Research
+
+`plugins/glasser-research` is a second plugin in this marketplace. It
+connects to `https://api.glasser.ai/mcp?toolset=directory` (search, inspect,
+run, runs_get with directory-safe text, Glasser ADR-0031 §9), the server the
+ChatGPT plugin uses, under the MCP server name `glasser-research`. Its skill
+is the research skill of the ChatGPT package
+(`openai/glasser/skills/glasser/SKILL.md` in
+[glasser-ai/plugins](https://github.com/glasser-ai/plugins)) plus a Setup
+section like the glasser plugin's. Port changes from there by hand.
+
+Its version is its own: edit the marketplace entry, `plugin.json` and the
+skill's `metadata.version` together (`bump-version.mjs` covers the glasser
+plugin only). `check-manifests.mjs` checks both plugins.
 
 ## Validator
 

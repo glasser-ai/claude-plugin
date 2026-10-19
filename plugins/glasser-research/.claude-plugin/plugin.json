@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "glasser-research",
+  "displayName": "Glasser Research",
+  "version": "0.1.0",
+  "description": "Research companies, markets and the web inside Claude. Glasser connects Claude to live data on companies and prospects, search rankings and keywords, websites and online reviews, social profiles, local businesses, news and property records. Ask things like \"What industry is example.com in and how many employees does it have?\" or \"Compare search visibility for example.com and a competitor\", and Claude finds a suitable data endpoint, shows what it needs, and runs it once you approve.",
+  "author": {
+    "name": "Glasser",
+    "email": "support@glasser.ai",
+    "url": "https://glasser.ai"
+  },
+  "homepage": "https://glasser.ai",
+  "repository": "https://github.com/glasser-ai/claude-plugin",
+  "license": "MIT",
+  "privacyPolicyUrl": "https://glasser.ai/privacy-policy",
+  "termsOfServiceUrl": "https://glasser.ai/terms-of-service",
+  "keywords": [
+    "glasser",
+    "company research",
+    "prospect research",
+    "seo",
+    "keywords",
+    "backlinks",
+    "web search",
+    "reviews",
+    "social media",
+    "local places",
+    "news",
+    "property data",
+    "mcp"
+  ],
+  "icon": "./assets/icon.png"
+}

@@ -1,6 +1,6 @@
 # Glasser plugin
 
-Search, inspect and run paid third-party API endpoints through one Key.
+Company, web and market data for Claude: search, inspect and run Glasser endpoints.
 Install instructions, authentication and the list of network endpoints are in
 the [repository README](https://github.com/glasser-ai/claude-plugin#readme).
 
@@ -9,7 +9,7 @@ the [repository README](https://github.com/glasser-ai/claude-plugin#readme).
 | Skill | `skills/glasser/SKILL.md` |
 | MCP server | `.mcp.json` |
 
-The MCP config points at `https://api.glasser.ai/mcp` and carries no
+The MCP config points at `https://api.glasser.ai/mcp?toolset=directory` and carries no
 credentials: the server speaks OAuth, so Claude Code signs the user in on
 first use. The plugin ships no executable code.
 

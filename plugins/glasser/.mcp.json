@@ -3,7 +3,7 @@
   "mcpServers": {
     "glasser": {
       "type": "http",
-      "url": "https://api.glasser.ai/mcp?utm_source=claude-code-plugin&utm_medium=plugin"
+      "url": "https://api.glasser.ai/mcp?toolset=directory&utm_source=claude-code-plugin&utm_medium=plugin"
     }
   }
 }

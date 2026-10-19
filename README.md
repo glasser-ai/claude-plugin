@@ -26,16 +26,14 @@ revoke the Key; the next sign-in reuses it.
 
 ## What you get
 
-**MCP tools** — `search`, `inspect`, `run`, `runs_get`, `runs_list`,
-`runs_stop`, `balance`. Only `run` creates a Run and charges the Workspace
-balance; the other tools read the catalog, past Runs and the Balance. Every
-Run reports its own charge.
+**MCP tools** — `search`, `inspect`, `run`, `runs_get`. Only `run` creates
+a Run and uses the Workspace balance; the other tools read the catalog and
+Runs.
 
-**Skill** — the workflow the agent follows: search the catalog, inspect an
-Endpoint's Price and charge clauses before running, run, then report the
-result and the charge. It uses only the MCP tools. When they are missing it
-walks the user through connecting the connector and setting its tools to
-Always allow.
+**Skill** — the research workflow the agent follows: prepare the query,
+search, inspect, run, get asynchronous results, and answer from the returned
+data. It uses only the MCP tools. When they are missing it walks the user
+through connecting the connector and setting its tools to Always allow.
 
 ## Network endpoints and credentials
 

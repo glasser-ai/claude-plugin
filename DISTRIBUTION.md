@@ -35,11 +35,13 @@ different setups:
 | Install command | `curl … \| sh` | none |
 | Version | follows the CLI | follows the plugin |
 
-The workflow, run statuses, troubleshooting and the rules for agents should
-say the same thing in both, written for MCP tools here and for CLI commands
-there. When the main repository changes one of those sections, port the
-change here by hand and bump the version. The Setup section is this
-plugin's own: it guides the user to connect the connector and set every
+Since 0.1.8 the plugin connects to `/mcp?toolset=directory` (search,
+inspect, run, runs_get with directory-safe text, Glasser ADR-0031 §9), and
+the skill below the Setup section is the research skill of the ChatGPT
+package (`openai/glasser/skills/glasser/SKILL.md` in
+[glasser-ai/plugins](https://github.com/glasser-ai/plugins)). Port changes to
+those sections from there by hand and bump the version. The Setup section is
+this plugin's own: it guides the user to connect the connector and set every
 tool to Always allow, following Zapier's and Adobe's plugins. `check-manifests.mjs` refuses `curl | sh`
 and `install.sh`, so a wholesale re-copy cannot slip through.
 
